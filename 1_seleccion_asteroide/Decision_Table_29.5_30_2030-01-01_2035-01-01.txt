@@ -1,0 +1,36 @@
++--------------+--------------------+-------------------+--------------------+------------------------------------------------------------------------------------+
+|   Asteroid   | Accesibility [m/s] | Orbit Uncertainty | Synodic Period [y] |                                  Additional Info                                   |
++--------------+--------------------+-------------------+--------------------+------------------------------------------------------------------------------------+
+|  (2008 WO2)  |       327.26       |         6         |       27.38        |                           ['Included in NHATS database']                           |
+| (2011 AM37)  |       718.94       |         6         |        7.48        |                           ['Included in NHATS database']                           |
+| (2014 WX202) |       219.47       |         2         |       19.58        |                           ['Included in NHATS database']                           |
+|  (2018 TV5)  |      1881.64       |         6         |        2.29        |                                         []                                         |
+|  (2019 JY2)  |       522.37       |         5         |        8.33        |                           ['Included in NHATS database']                           |
+| (2019 VC37)  |       319.14       |         6         |       13.93        |                                         []                                         |
+| (2020 BZ13)  |      4785.99       |         7         |        3.35        |                                         []                                         |
+|  (2020 DR4)  |       840.28       |         6         |        2.79        |                           ['Included in NHATS database']                           |
+|  (2020 PX5)  |      1467.87       |         7         |        1.66        |                                         []                                         |
+|  (2020 RD4)  |       998.77       |         6         |       58.88        |                ['4 close approaches from 2030-01-01 to 2035-01-01']                |
+|  (2020 SN3)  |       650.43       |         7         |        5.85        |                           ['Included in NHATS database']                           |
+|  (2021 KQ2)  |      1460.98       |         5         |        6.83        |                           ['Included in NHATS database']                           |
+|  (2021 VH)   |       524.05       |         4         |       113.16       | ['9 close approaches from 2030-01-01 to 2035-01-01', 'Included in NHATS database'] |
+|  (2022 BT)   |       978.39       |         6         |        4.56        |            ['Spin rate known 0.4554 rpm', 'Included in NHATS database']            |
+|  (2022 BN2)  |       913.63       |         6         |       10.54        |                                         []                                         |
+|  (2022 BM3)  |       792.89       |         7         |        5.23        |                           ['Included in NHATS database']                           |
+| (2022 UC14)  |       425.7        |         5         |       58.08        | ['3 close approaches from 2030-01-01 to 2035-01-01', 'Included in NHATS database'] |
+|  (2023 BU)   |       1618.9       |         1         |        7.1         |                           ['Included in NHATS database']                           |
+|  (2023 JA3)  |       506.34       |         6         |       12.08        |                           ['Included in NHATS database']                           |
+|  (2023 MB3)  |       1343.0       |         5         |        4.71        |                           ['Included in NHATS database']                           |
+| (2023 TP16)  |       662.64       |         6         |        7.71        |                           ['Included in NHATS database']                           |
+| (2023 TO17)  |      1648.71       |         6         |        4.42        |                                         []                                         |
+|  (2023 UY)   |       646.94       |         4         |        9.84        |                           ['Included in NHATS database']                           |
+|  (2023 XU)   |      1087.38       |         7         |        2.75        |                           ['Included in NHATS database']                           |
+|  (2024 GX3)  |       832.92       |         6         |        6.95        |                                         []                                         |
+| (2024 JN16)  |       756.01       |         5         |        9.26        |                           ['Included in NHATS database']                           |
+|  (2024 RH7)  |       1866.7       |         7         |        4.34        |                                         []                                         |
+|  (2024 TD6)  |       413.62       |         6         |        5.83        |                           ['Included in NHATS database']                           |
+| (2024 UB11)  |      1815.86       |         6         |        2.84        |                                         []                                         |
+|  (2024 VR4)  |       388.35       |         7         |       20.08        |                           ['Included in NHATS database']                           |
+|  (2024 YR6)  |       380.07       |         6         |       11.81        |                           ['Included in NHATS database']                           |
+|  (2025 BD1)  |       713.12       |         7         |        3.19        |                           ['Included in NHATS database']                           |
++--------------+--------------------+-------------------+--------------------+------------------------------------------------------------------------------------+
