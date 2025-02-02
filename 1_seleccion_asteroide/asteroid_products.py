@@ -91,6 +91,7 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     ax3.set_xlabel("U_inf")
     ax3.set_ylabel("Delta_v [m/s]")
     ax3.set_xlim(0,1.4)
+    ax3.set_xlim(bottom=0)
     ax3.grid(True)
 
     # #d Accesibility

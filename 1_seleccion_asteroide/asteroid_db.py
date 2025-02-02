@@ -40,7 +40,7 @@ def asteroid_load(H_min,H_max,date_app_min,date_app_max,dist_app):
 
 
     #Check all asteroid DB to compute Orbital Afinity and load data in asteroid_db
-    url='https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=full_name,H,e,a,q,i,om,w,ad,per_y,moid,condition_code&sb-kind=a&sb-group=neo&full-prec=true'
+    url=f'https://ssd-api.jpl.nasa.gov/sbdb_query.api?fields=full_name,H,e,a,q,i,om,w,ad,per_y,moid,condition_code&sb-kind=a&sb-group=neo&full-prec=true&sb-cdata=%7b%22AND%22%3a%5b%22H%7cRG%7c{H_min*0.98}%7c{H_max*1.02}%22%5d%7d'
     response=requests.get(url)
     response_json=response.json()
     asteroid_all = [

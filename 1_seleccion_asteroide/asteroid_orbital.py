@@ -55,9 +55,10 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all):
         if g_2_ast<g_2:
             g_2=g_2_ast #Update metric
             familiar=asteroid_all.loc[n_ast_db,'ID'] #Update the most similar asteroid
+            familiar_H=asteroid_all.loc[n_ast_db,'H'] #Include H value of familiar
         
 
-    return g_2,familiar
+    return g_2,familiar,familiar_H
 
 
 def asteroid_period(n_ast,asteroid):
