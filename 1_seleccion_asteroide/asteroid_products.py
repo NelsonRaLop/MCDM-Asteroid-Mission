@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 from prettytable import PrettyTable
+import pandas as pd
 
 
 def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed):
@@ -14,29 +15,25 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     
     return none
     '''
-    
+    asteroid.reset_index(drop=True, inplace=True)
+
     # 1.-
     archive=f'asteroid_output_{H_min}_{H_max}_{date_app_min}_{date_app_max}.csv'
-    with open(archive, mode='w',newline='') as csvfile:
-       writer=csv.writer(csvfile)
-       writer.writerow(["0 ID, 1 H, 2 e, 3 a, 4 Perigee, 5 i, 6 RAAN, 7 arg_perig, 8 Apogee, 9 period [y], \
-    10 MOID, 11 condition_code, 12 SMASS taxonomy, 13 Spin period,14 Satellites, 15 PHA,\
-    16 del_v_tot, 17 period_sin_y, 18 g_2^2, 19 Familiar, 20 Approaches, 21 NHATs, 22 Geometry"])
-       writer.writerows(asteroid)
+    asteroid.to_csv(archive, index=False)
      
     # 2.- 
     summary_table = PrettyTable(['Asteroid', 'Accesibility [m/s]','Orbit Uncertainty','Synodic Period [y]','Additional Info'])
     for n_ast in range(len(asteroid)):
         
         additional_info=[]
-        if asteroid[n_ast][12] is not None: additional_info.append(f'SMASSII Taxonomy Known: {asteroid[n_ast][12]}')
-        if asteroid[n_ast][13] is not None: additional_info.append(f'Spin rate known {round(1/(float(asteroid[n_ast][13])*60),4)} rpm')
-        if asteroid[n_ast][14]==1: additional_info.append('Secondary body')
-        if asteroid[n_ast][20]>=3: additional_info.append(f'{asteroid[n_ast][20]} close approaches from {date_app_min} to {date_app_max}')
-        if asteroid[n_ast][21]==True: additional_info.append('Included in NHATS database')
-        if asteroid[n_ast][22]==True: additional_info.append('Geometry model available' )
+        if asteroid.loc[n_ast,'SMASS taxonomy'] is not None: additional_info.append(f'SMASSII Taxonomy Known: {asteroid.loc[n_ast,"SMASS taxonomy"]}')
+        if asteroid.loc[n_ast,'Spin period'] is not None: additional_info.append(f'Spin rate known {round(1/(float(asteroid.loc[n_ast,"Spin period"])*60),4)} rpm')
+        if asteroid.loc[n_ast,'Satellites']==1: additional_info.append('Secondary body')
+        if asteroid.loc[n_ast,'approaches']>=3: additional_info.append(f'{asteroid.loc[n_ast,'approaches']} close approaches from {date_app_min} to {date_app_max}')
+        if asteroid.loc[n_ast,'is_NHATS']==True: additional_info.append('Included in NHATS database')
+        if asteroid.loc[n_ast,'is_geometry']==True: additional_info.append('Geometry model available' )
             
-        summary_table.add_row([asteroid[n_ast][0], round(asteroid[n_ast][16],2), asteroid[n_ast][11], round(asteroid[n_ast][17],2),additional_info])
+        summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), asteroid.loc[n_ast,'condition_code'], round(asteroid.loc[n_ast,'period_sin'],2),additional_info])
     print(summary_table)
     table = f'Decision_Table_{H_min}_{H_max}_{date_app_min}_{date_app_max}.txt'
     with open(table, 'w') as file:
@@ -51,20 +48,20 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     delta_v=np.zeros(len(asteroid))
 
     for n_ast in range(0,len(asteroid)):
-        a[n_ast]=asteroid[n_ast][3] #a
-        e[n_ast]=asteroid[n_ast][2] #e
-        i[n_ast]=asteroid[n_ast][5] #i
+        a[n_ast]=asteroid.loc[n_ast,'a'] #a
+        e[n_ast]=asteroid.loc[n_ast,'e'] #e
+        i[n_ast]=asteroid.loc[n_ast,'i'] #i
         u_inf[n_ast]=np.sqrt(abs(3-(1/a[n_ast]+2*np.sqrt(a[n_ast]*(1-e[n_ast]**2))*np.cos(i[n_ast]*np.pi/180)))) 
-        delta_v[n_ast]=asteroid[n_ast][16] #delta_v_tot
+        delta_v[n_ast]=asteroid.loc[n_ast,'delta_v_tot'] #delta_v_tot
 
     #Removed asteroid data
     a_others=np.zeros(len(asteroid_removed))
     e_others=np.zeros(len(asteroid_removed))
     i_others=np.zeros(len(asteroid_removed))
     for n_ast in range(0,len(asteroid_removed)):
-        a_others[n_ast]=asteroid_removed[n_ast][3] #a
-        e_others[n_ast]=asteroid_removed[n_ast][2] #e
-        i_others[n_ast]=asteroid_removed[n_ast][5] #i
+        a_others[n_ast]=asteroid_removed.loc[n_ast,'a'] #a
+        e_others[n_ast]=asteroid_removed.loc[n_ast,'e'] #e
+        i_others[n_ast]=asteroid_removed.loc[n_ast,'i'] #i
 
     #Plots
     fig=plt.figure(figsize=(15,15))

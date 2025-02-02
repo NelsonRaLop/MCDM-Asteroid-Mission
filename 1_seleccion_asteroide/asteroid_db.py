@@ -1,7 +1,7 @@
 ### Import packages ###
 import requests
-import csv
 import re
+import pandas as pd
 
 def asteroid_load(H_min,H_max,date_app_min,date_app_max,dist_app):
     """
@@ -31,11 +31,12 @@ def asteroid_load(H_min,H_max,date_app_min,date_app_max,dist_app):
     ]
     
     #Write a file with raw data
-    archive_in=f'asteroid_input_{H_min}_{H_max}.csv'
-    with open(archive_in, mode='w',newline='') as csvfile: 
-        writer=csv.writer(csvfile)
-        writer.writerow(["0 ID, 1 H, 2 e, 3 a, 4 Perigee, 5 i, 6 RAAN, 7 arg_perig, 8 Apogee, 9 period [y],10 MOID, 11 condition_code, 12 SMASS taconomy, 13 Spin period,14 Satellites, 15 PHA"])
-        writer.writerows(asteroid)
+    df_asteroid = pd.DataFrame(asteroid, columns=[
+        "ID", "H", "e", "a", "Perigee", "i", "RAAN", "arg_perig", "Apogee", "period [y]",
+        "MOID", "condition_code", "SMASS taxonomy", "Spin period", "Satellites", "PHA"
+    ])
+    archive_in = f'asteroid_input_{H_min}_{H_max}.csv'
+    df_asteroid.to_csv(archive_in, index=False)
 
 
     #Check all asteroid DB to compute Orbital Afinity and load data in asteroid_db
@@ -46,7 +47,10 @@ def asteroid_load(H_min,H_max,date_app_min,date_app_max,dist_app):
         [field.strip() if field is not None else '' for field in db_asteroid_data]
         for db_asteroid_data in response_json.get("data", [])
     ]
-
+    df_asteroid_all = pd.DataFrame(asteroid_all, columns=[
+        "ID", "H", "e", "a", "Perigee", "i", "RAAN", "arg_perig", "Apogee", "period [y]",
+        "MOID", "condition_code"
+    ])
 
     ### 2.-
     url=f'https://ssd-api.jpl.nasa.gov/cad.api?dist-max={dist_app}&date-min={date_app_min}&date-max={date_app_max}&h-min={H_min}&h-max={H_max}&nea=true&sort=object'
@@ -69,7 +73,7 @@ def asteroid_load(H_min,H_max,date_app_min,date_app_max,dist_app):
     response=requests.get(url)
     asteroid_geometry = response.text
 
-    return asteroid,asteroid_all,asteroid_app,asteroid_NHATS,asteroid_geometry,archive_in
+    return df_asteroid,df_asteroid_all,asteroid_app,asteroid_NHATS,asteroid_geometry,archive_in
 
 
 
@@ -92,7 +96,7 @@ def asteroid_filtering(filter,n_ast,asteroid,asteroid_removed,asteroid_app,aster
     """
 
  # 1.-
-    match = re.match(r'^(\d+)', asteroid[n_ast][0].strip()) # Check if numbered
+    match = re.match(r'^(\d+)', asteroid.loc[n_ast,'ID'].strip()) # Check if numbered
     if match:
         name = match.group(1)  # Extract number (ex, "756476")
 
@@ -102,7 +106,7 @@ def asteroid_filtering(filter,n_ast,asteroid,asteroid_removed,asteroid_app,aster
 
     else:
         # Is not numbered, provisional id "(1993 BU3)")
-        name = asteroid[n_ast][0].strip().strip("()")
+        name = asteroid.loc[n_ast, 'ID'].strip().strip("()")
         is_geometry=False
 
     # 2.- 
@@ -111,16 +115,16 @@ def asteroid_filtering(filter,n_ast,asteroid,asteroid_removed,asteroid_app,aster
     
     # 3.-
     if approaches == 0:
-        asteroid_removed.append(asteroid[n_ast])
-        del asteroid[n_ast]
+        asteroid_removed = pd.concat([asteroid_removed, asteroid.loc[[n_ast]]], ignore_index=True)
+        asteroid.drop(n_ast, inplace=True)
         cont=0
 
     # 4.-  
     elif filter==1: 
-      if asteroid[n_ast][12]==None and asteroid[n_ast][13]==None and \
-      asteroid[n_ast][14]==0 or asteroid[n_ast][15]=='N':
-        asteroid_removed.append(asteroid[n_ast])
-        del asteroid[n_ast]
+      if asteroid.loc[n_ast,'SMASS taxonomy']==None and asteroid.loc[n_ast,'Spin period']==None and \
+      asteroid.loc[n_ast,'Satellites']==0 or asteroid.loc[n_ast,'PHA']=='N':
+        asteroid_removed = pd.concat([asteroid_removed, asteroid.loc[[n_ast]]], ignore_index=True)
+        asteroid.drop(n_ast, inplace=True)
         cont=0     
     else: cont=1
 
@@ -128,4 +132,4 @@ def asteroid_filtering(filter,n_ast,asteroid,asteroid_removed,asteroid_app,aster
     if name in asteroid_NHATS: is_NHATS=True
     else: is_NHATS=False
 
-    return cont,approaches,is_NHATS,is_geometry
+    return cont,approaches,is_NHATS,is_geometry,asteroid_removed

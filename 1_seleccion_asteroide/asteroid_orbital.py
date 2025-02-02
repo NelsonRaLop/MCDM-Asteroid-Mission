@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 
 ### Load constant values  ###
 NU_SUN=1.32712440018e20 #Sun gravitational constant [SI]
@@ -20,11 +21,11 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all):
     '''
 
     # 1.- 
-    ex=float(asteroid[n_ast][2])
-    a=float(asteroid[n_ast][3]) #[ua]
-    inc=float(asteroid[n_ast][5])*2*np.pi/360 #[rad]
-    arg_per=float(asteroid[n_ast][7])*2*np.pi/360 #[rad]
-    asc_node=float(asteroid[n_ast][6])*2*np.pi/360 #[rad]
+    ex=float(asteroid.loc[n_ast,'e'])
+    a=float(asteroid.loc[n_ast,'a']) #[ua]
+    inc=float(asteroid.loc[n_ast,'i'])*2*np.pi/360 #[rad]
+    arg_per=float(asteroid.loc[n_ast,'arg_perig'])*2*np.pi/360 #[rad]
+    asc_node=float(asteroid.loc[n_ast,'RAAN'])*2*np.pi/360 #[rad]
     p=a*(1-ex**2) #[ua]
 
     # 2.-
@@ -32,14 +33,13 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all):
     familiar='none' #Initialization
     for n_ast_db in range(0,len(asteroid_all)):
 
-        if asteroid[n_ast][0] == asteroid_all[n_ast_db][0]: continue #Skip itself
-
+        if asteroid.loc[n_ast,'ID'] == asteroid_all.loc[n_ast_db,'ID']: continue #Skip itself
         # Orbit parameters of all asteroid in DB
-        ex_2=float(asteroid_all[n_ast_db][2])
-        a_2=float(asteroid_all[n_ast_db][3])
-        inc_2=float(asteroid_all[n_ast_db][5])*2*np.pi/360
-        arg_per_2=float(asteroid_all[n_ast_db][7])*2*np.pi/360
-        asc_node_2=float(asteroid_all[n_ast_db][6])*2*np.pi/360
+        ex_2=float(asteroid_all.loc[n_ast_db,'e'])
+        a_2=float(asteroid_all.loc[n_ast_db,'a'])
+        inc_2=float(asteroid_all.loc[n_ast_db,'i'])*2*np.pi/360
+        arg_per_2=float(asteroid_all.loc[n_ast_db,'arg_perig'])*2*np.pi/360
+        asc_node_2=float(asteroid_all.loc[n_ast_db,'RAAN'])*2*np.pi/360
         p_2=a_2*(1-ex_2**2)
 
         # Compute afinity/similarity parameter
@@ -54,7 +54,7 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all):
         g_2_ast=(1+ex**2)*p + (1+ex_2**2)*p_2 - 2*np.sqrt(p*p_2)*(cos_I+ex*ex_2*cos_P)
         if g_2_ast<g_2:
             g_2=g_2_ast #Update metric
-            familiar=asteroid_all[n_ast_db][0] #Update the most similar asteroid
+            familiar=asteroid_all.loc[n_ast_db,'ID'] #Update the most similar asteroid
         
 
     return g_2,familiar
@@ -64,7 +64,7 @@ def asteroid_period(n_ast,asteroid):
     '''
     This function computes the synodic period of the asteroid [years]
     '''
-    period=float(asteroid[n_ast][9]) #[y]
+    period=float(asteroid.loc[n_ast,'period [y]']) #[y]
     period_sin=1/abs(1/period-1) #[y]
 
     return period_sin
@@ -86,15 +86,15 @@ def asteroid_accessibility(n_ast, asteroid):
     '''
 
     # 1.-
-    ex=float(asteroid[n_ast][2])
-    a=float(asteroid[n_ast][3]) #[au]
+    ex=float(asteroid.loc[n_ast,'e'])
+    a=float(asteroid.loc[n_ast,'a']) #[au]
     a_m=a*AU #[m]
-    inc=float(asteroid[n_ast][5])*2*np.pi/360 #[rad]
-    arg_per=float(asteroid[n_ast][7])*2*np.pi/360 #[rad]
+    inc=float(asteroid.loc[n_ast,'i'])*2*np.pi/360 #[rad]
+    arg_per=float(asteroid.loc[n_ast,'arg_perig'])*2*np.pi/360 #[rad]
     p=a*(1-ex**2) #[au]
     p_m=a_m*(1-ex**2) #[m]
-    q=float(asteroid[n_ast][4])#[au]
-    Q=float(asteroid[n_ast][8])#[au]
+    q=float(asteroid.loc[n_ast,'Perigee'])#[au]
+    Q=float(asteroid.loc[n_ast,'Apogee'])#[au]
 
     # 2.- 
     if q<=1 and Q>=1: #'crossing'
