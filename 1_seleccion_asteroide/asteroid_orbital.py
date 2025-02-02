@@ -51,7 +51,7 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all):
                 np.cos(inc)*np.sin(arg_per)*np.cos(arg_per_2))*np.sin(asc_node-asc_node_2)  
 
     # 3.-
-        g_2_ast=(1+ex**2)*p + (1+ex_2**2)*p_2 - 2*np.sqrt(p*p_2)*(cos_I+ex*ex_2*cos_P)
+        g_2_ast=np.sqrt((1+ex**2)*p + (1+ex_2**2)*p_2 - 2*np.sqrt(p*p_2)*(cos_I+ex*ex_2*cos_P))
         if g_2_ast<g_2:
             g_2=g_2_ast #Update metric
             familiar=asteroid_all.loc[n_ast_db,'ID'] #Update the most similar asteroid
