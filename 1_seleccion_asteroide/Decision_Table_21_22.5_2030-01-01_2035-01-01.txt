@@ -1,0 +1,54 @@
++--------------------------+--------------------+-------------------+--------------------+--------------------------------------------------------------------------------------------------------+
+|         Asteroid         | Accesibility [m/s] | Orbit Uncertainty | Synodic Period [y] |                                            Additional Info                                             |
++--------------------------+--------------------+-------------------+--------------------+--------------------------------------------------------------------------------------------------------+
+| 85585 Mjolnir (1998 FG2) |      2755.34       |         0         |        3.09        |                      ['Spin rate known 0.0014 rpm', 'Included in NHATS database']                      |
+|    253062 (2002 TC70)    |       786.15       |         0         |        2.66        |                                     ['Spin rate known 0.0006 rpm']                                     |
+|     265482 (2005 EE)     |      3104.53       |         0         |        6.02        |                                     ['Spin rate known 0.0063 rpm']                                     |
+|     306383 (1993 VD)     |      3432.05       |         0         |        4.55        |                                     ['Spin rate known 0.0177 rpm']                                     |
+|    350462 (1998 KG3)     |      1908.45       |         0         |        5.03        |                      ['Spin rate known 0.0012 rpm', 'Included in NHATS database']                      |
+|    363599 (2004 FG11)    |      5701.82       |         0         |        2.0         | ['Spin rate known 0.0024 rpm', 'Secondary body', '3.0 close approaches from 2030-01-01 to 2035-01-01'] |
+|    422686 (2000 AC6)     |      2386.84       |         0         |        3.73        |       ['SMASSII Taxonomy Known: Q', 'Spin rate known 0.0068 rpm', 'Included in NHATS database']        |
+|     433303 (2013 NX)     |      3133.33       |         2         |       21.44        |                      ['Spin rate known 0.109 rpm', 'Included in NHATS database']                       |
+|     437844 (1999 MN)     |      2629.69       |         0         |        1.24        |                                     ['Spin rate known 0.003 rpm']                                      |
+|     455415 (2003 GA)     |      1598.49       |         0         |        3.22        |                                     ['Spin rate known 0.0029 rpm']                                     |
+|    528159 (2008 HS3)     |       540.56       |         0         |        2.76        |                      ['Spin rate known 0.0016 rpm', 'Included in NHATS database']                      |
+|    533011 (2014 AY28)    |       514.33       |         0         |        2.42        |                                     ['Spin rate known 0.0182 rpm']                                     |
+|   535844 (2015 BY310)    |      2158.95       |         0         |        2.0         |                                     ['Spin rate known 0.1798 rpm']                                     |
+|    612509 (2002 UK11)    |      4466.53       |         0         |        2.91        |                                     ['Spin rate known 0.0021 rpm']                                     |
+|    745311 (2010 XC15)    |      1457.47       |         0         |        1.68        |                                     ['Spin rate known 0.0062 rpm']                                     |
+|    756065 (2018 DH1)     |      2465.76       |         0         |        1.49        |                                     ['Spin rate known 0.0033 rpm']                                     |
+|        (1994 CJ1)        |      1975.33       |         0         |        2.22        |                            ['Spin rate known 0.0006 rpm', 'Secondary body']                            |
+|        (1995 CR)         |      9104.41       |         0         |        6.34        |                                     ['Spin rate known 0.0063 rpm']                                     |
+|        (2000 KA)         |      1676.72       |         0         |        2.86        |                                     ['Spin rate known 0.0015 rpm']                                     |
+|       (2000 RE52)        |      2083.55       |         1         |        5.16        |                                     ['Spin rate known 0.0034 rpm']                                     |
+|       (2000 TU28)        |       805.75       |         0         |       10.01        |                                     ['Spin rate known 0.0001 rpm']                                     |
+|        (2002 LY1)        |      2307.23       |         0         |       14.18        |                                     ['Spin rate known 0.0052 rpm']                                     |
+|       (2003 AF23)        |       3182.4       |         0         |        4.49        |                                     ['Spin rate known 0.0008 rpm']                                     |
+|       (2004 RQ10)        |       638.13       |         3         |        1.65        |                                     ['Spin rate known 0.0029 rpm']                                     |
+|        (2005 WD)         |      2449.13       |         0         |        1.4         |                                     ['Spin rate known 0.0057 rpm']                                     |
+|        (2006 KC)         |      4328.64       |         6         |        3.87        |                                     ['Spin rate known 0.0256 rpm']                                     |
+|       (2007 ED125)       |       3288.9       |         0         |        1.6         |                                     ['Spin rate known 0.003 rpm']                                      |
+|        (2007 KE)         |      4884.07       |         0         |        1.85        |                                     ['Spin rate known 0.0228 rpm']                                     |
+|       (2007 TQ24)        |      4004.72       |         0         |        2.41        |                                     ['Spin rate known 0.0003 rpm']                                     |
+|       (2007 VM184)       |      4376.65       |         0         |        4.53        |                                     ['Spin rate known 0.0004 rpm']                                     |
+|        (2008 KV2)        |      2881.49       |         0         |        3.63        |                                     ['Spin rate known 0.4386 rpm']                                     |
+|        (2011 CG2)        |      1358.49       |         0         |        4.6         |                      ['Spin rate known 0.0015 rpm', 'Included in NHATS database']                      |
+|       (2012 XS111)       |      3983.51       |         1         |        2.13        |                                     ['Spin rate known 0.0078 rpm']                                     |
+|        (2013 NJ)         |      1761.21       |         0         |        3.18        |                      ['Spin rate known 0.0001 rpm', 'Included in NHATS database']                      |
+|       (2014 CG13)        |      1741.97       |         6         |        5.33        |                                     ['Spin rate known 0.0007 rpm']                                     |
+|       (2014 HK129)       |      2791.88       |         0         |        1.82        |                                     ['Spin rate known 0.0011 rpm']                                     |
+|       (2015 BK509)       |      2191.29       |         0         |        5.05        |                                     ['Spin rate known 0.2249 rpm']                                     |
+|       (2015 FO124)       |      3280.97       |         0         |        2.78        |                                     ['Spin rate known 0.0021 rpm']                                     |
+|        (2015 HA1)        |      3400.22       |         2         |       17.83        |                      ['Spin rate known 0.0004 rpm', 'Included in NHATS database']                      |
+|       (2015 NA14)        |      3100.85       |         1         |       18.74        |          ['Spin rate known 0.0024 rpm', '4.0 close approaches from 2030-01-01 to 2035-01-01']          |
+|        (2016 FY3)        |      3662.55       |         3         |        1.31        |                                     ['Spin rate known 0.0008 rpm']                                     |
+|       (2016 NG33)        |      3534.21       |         2         |       18.64        |                                     ['Spin rate known 0.0072 rpm']                                     |
+|       (2017 QL33)        |      1266.14       |         0         |        1.67        |                                     ['Spin rate known 0.0005 rpm']                                     |
+|       (2017 WX12)        |      2055.18       |         2         |        1.45        |                                     ['Spin rate known 0.001 rpm']                                      |
+|        (2019 BK)         |      5668.65       |         0         |        1.51        |                                     ['Spin rate known 0.0058 rpm']                                     |
+|        (2019 CD5)        |      2721.46       |         2         |        1.39        |                                     ['Spin rate known 0.0006 rpm']                                     |
+|        (2020 AD3)        |      4415.92       |         1         |       37.92        |                                     ['Spin rate known 0.002 rpm']                                      |
+|        (2020 DM4)        |      1414.19       |         4         |        1.63        |                                     ['Spin rate known 0.0025 rpm']                                     |
+|        (2022 HB)         |       4164.3       |         0         |        11.2        |                                     ['Spin rate known 0.0002 rpm']                                     |
+|        (2022 UD9)        |      2536.47       |         3         |        2.31        |                                     ['Spin rate known 0.0013 rpm']                                     |
++--------------------------+--------------------+-------------------+--------------------+--------------------------------------------------------------------------------------------------------+

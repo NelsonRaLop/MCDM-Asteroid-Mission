@@ -29,7 +29,7 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
         if asteroid.loc[n_ast,'SMASS taxonomy'] is not None: additional_info.append(f'SMASSII Taxonomy Known: {asteroid.loc[n_ast,"SMASS taxonomy"]}')
         if asteroid.loc[n_ast,'Spin period'] is not None: additional_info.append(f'Spin rate known {round(1/(float(asteroid.loc[n_ast,"Spin period"])*60),4)} rpm')
         if asteroid.loc[n_ast,'Satellites']==1: additional_info.append('Secondary body')
-        if asteroid.loc[n_ast,'approaches']>=3: additional_info.append(f'{asteroid.loc[n_ast,'approaches']} close approaches from {date_app_min} to {date_app_max}')
+        if asteroid.loc[n_ast,'approaches']>=3: additional_info.append(f"{asteroid.loc[n_ast,'approaches']} close approaches from {date_app_min} to {date_app_max}")
         if asteroid.loc[n_ast,'is_NHATS']==True: additional_info.append('Included in NHATS database')
         if asteroid.loc[n_ast,'is_geometry']==True: additional_info.append('Geometry model available' )
             

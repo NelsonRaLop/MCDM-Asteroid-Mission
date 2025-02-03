@@ -122,10 +122,11 @@ def asteroid_filtering(filter,n_ast,asteroid,asteroid_removed,asteroid_app,aster
     # 4.-  
     elif filter==1: 
       if asteroid.loc[n_ast,'SMASS taxonomy']==None and asteroid.loc[n_ast,'Spin period']==None and \
-      asteroid.loc[n_ast,'Satellites']==0 or asteroid.loc[n_ast,'PHA']=='N':
+      asteroid.loc[n_ast,'Satellites']==0:
         asteroid_removed = pd.concat([asteroid_removed, asteroid.loc[[n_ast]]], ignore_index=True)
         asteroid.drop(n_ast, inplace=True)
-        cont=0     
+        cont=0
+      else: cont=1       
     else: cont=1
 
     # 5.-
