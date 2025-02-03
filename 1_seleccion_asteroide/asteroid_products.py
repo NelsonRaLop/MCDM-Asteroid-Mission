@@ -22,18 +22,23 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     asteroid.to_csv(archive, index=False)
      
     # 2.- 
-    summary_table = PrettyTable(['Asteroid', 'Accesibility [m/s]','Orbit Uncertainty','Synodic Period [y]','Additional Info'])
+    summary_table = PrettyTable(['Asteroid', 'Accesibility [m/s]','Orbit Uncertainty','Synodic Period [y]','Spin Rate [rpm]','Additional Info'])
     for n_ast in range(len(asteroid)):
         
+        if asteroid.loc[n_ast,'Spin period'] is not None: asteroid.loc[n_ast,'Spin period']=round(1/(float(asteroid.loc[n_ast,"Spin period"])*60),4)
+
         additional_info=[]
         if asteroid.loc[n_ast,'SMASS taxonomy'] is not None: additional_info.append(f'SMASSII Taxonomy Known: {asteroid.loc[n_ast,"SMASS taxonomy"]}')
-        if asteroid.loc[n_ast,'Spin period'] is not None: additional_info.append(f'Spin rate known {round(1/(float(asteroid.loc[n_ast,"Spin period"])*60),4)} rpm')
+        #if asteroid.loc[n_ast,'Spin period'] is not None: additional_info.append(f'Spin rate known {round(1/(float(asteroid.loc[n_ast,"Spin period"])*60),4)} rpm')
         if asteroid.loc[n_ast,'Satellites']==1: additional_info.append('Secondary body')
         if asteroid.loc[n_ast,'approaches']>=3: additional_info.append(f"{asteroid.loc[n_ast,'approaches']} close approaches from {date_app_min} to {date_app_max}")
         if asteroid.loc[n_ast,'is_NHATS']==True: additional_info.append('Included in NHATS database')
         if asteroid.loc[n_ast,'is_geometry']==True: additional_info.append('Geometry model available' )
-            
-        summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), asteroid.loc[n_ast,'condition_code'], round(asteroid.loc[n_ast,'period_sin'],2),additional_info])
+        if asteroid.loc[n_ast,'PHA']=='Y': additional_info.append('PHA asteroid' )
+                  
+        summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), asteroid.loc[n_ast,'condition_code'], 
+                               round(asteroid.loc[n_ast,'period_sin'],2),asteroid.loc[n_ast,'Spin period'],additional_info])
+        
     print(summary_table)
     table = f'Decision_Table_{H_min}_{H_max}_{date_app_min}_{date_app_max}.txt'
     with open(table, 'w') as file:
