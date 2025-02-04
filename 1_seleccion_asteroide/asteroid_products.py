@@ -1,28 +1,25 @@
-import csv
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 from prettytable import PrettyTable
-import pandas as pd
-
 
 def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed):
     '''
     This function generates the following products
     1.- Generation of csv ouput file
-    2.- Generation of decision table file (simplified)
+    2.- Generation of decision table file (simplified): Asteroid', 'Accesibility [m/s]',
+        'Potential backup asteroids','Orbit Uncertainty','Synodic Period [y]','Spin Rate [rpm]','Additional Info' 
     3.- Generation of plots
     
     return none
     '''
-    asteroid.reset_index(drop=True, inplace=True)
 
     # 1.-
     archive=f'asteroid_output_{H_min}_{H_max}_{date_app_min}_{date_app_max}.csv'
     asteroid.to_csv(archive, index=False)
      
     # 2.- 
-    summary_table = PrettyTable(['Asteroid', 'Accesibility [m/s]','Orbit Uncertainty','Synodic Period [y]','Spin Rate [rpm]','Additional Info'])
+    summary_table = PrettyTable(['Asteroid', 'Accesibility [m/s]','Potential backup asteroids','Orbit Uncertainty','Synodic Period [y]','Spin Rate [rpm]','Additional Info'])
     for n_ast in range(len(asteroid)):
         
         if asteroid.loc[n_ast,'Spin period'] is not None: asteroid.loc[n_ast,'Spin period']=round(1/(float(asteroid.loc[n_ast,"Spin period"])*60),4)
@@ -35,7 +32,7 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
         if asteroid.loc[n_ast,'is_geometry']==True: additional_info.append('Geometry model available' )
         if asteroid.loc[n_ast,'PHA']=='Y': additional_info.append('PHA asteroid' )
                   
-        summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), asteroid.loc[n_ast,'condition_code'], 
+        summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), asteroid.loc[n_ast,'n_backup'], asteroid.loc[n_ast,'condition_code'], 
                                round(asteroid.loc[n_ast,'period_sin'],2),asteroid.loc[n_ast,'Spin period'],additional_info])
         
     print(summary_table)
