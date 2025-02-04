@@ -76,11 +76,10 @@ def asteroid_filtering(filter,n_ast,asteroid,asteroid_removed,asteroid_app,aster
 
     return cont,approaches,approach_date,is_NHATS,is_geometry,asteroid_removed
 
-    1.- Check close approaches & check if geometry model is available 
+    1.- Check close approaches & check if geometry model is available and Check if the asteroid is included in NHATS list
     2.- Compute the number of close approaches in the period considered and get the date of first Earth approache as reference
     3.- Remove if NO approches
     4.- Apply additional filtering if filter==1 
-    5.- Check if the asteroid is included in NHATS list
 
     """
 
@@ -97,7 +96,10 @@ def asteroid_filtering(filter,n_ast,asteroid,asteroid_removed,asteroid_app,aster
         # Is not numbered, provisional id "(1993 BU3)")
         name = asteroid.loc[n_ast, 'ID'].strip().strip("()")
         is_geometry=False
-
+    
+    if name in asteroid_NHATS: is_NHATS=True
+    else: is_NHATS=False
+    
     # 2.- 
     approaches = 0 # Initialization
     approach_date_raw = approach_date = None  #  Initialization
@@ -119,15 +121,11 @@ def asteroid_filtering(filter,n_ast,asteroid,asteroid_removed,asteroid_app,aster
     # 4.-  
     elif filter==1: 
       if asteroid.loc[n_ast,'SMASS taxonomy']==None and asteroid.loc[n_ast,'Spin period']==None and \
-      asteroid.loc[n_ast,'Satellites']==0 and asteroid.loc[n_ast,'is_NHATS']==False and asteroid.loc[n_ast,'approaches']<3:
+      asteroid.loc[n_ast,'Satellites']==0 and is_NHATS==False and approaches<3:
         asteroid_removed = pd.concat([asteroid_removed, asteroid.loc[[n_ast]]], ignore_index=True)
         asteroid.drop(n_ast, inplace=True)
         cont=0
       else: cont=1       
     else: cont=1
-
-    # 5.-
-    if name in asteroid_NHATS: is_NHATS=True
-    else: is_NHATS=False
 
     return cont,approaches,approach_date,is_NHATS,is_geometry,asteroid_removed
