@@ -1,11 +1,1 @@
-Script v4:
-(0) No hace falta tener cargado ningún archivo con datos orbitales, el script los descarga.
-(1) Unico a modificar por usuario - Seleccionar el rango de magnitud absoluta de los asteroides interes y el abanico de fechas de estudio
-(2) Carga con la API JPL Small Body Database Query los asteroides con el H de (1) y escribe los datos de estos asteroides en el archivo ‘asteroid_input_xxx.csv’
-(3) Carga con la API JPL Small Body Database Query TODOS los NEA de la base de datos
-(4) Carga con la API JPL Close Approches los acercamientos cercanos a la Tierra de los asteroides con H y dentro del periodo de interés determinado en (1) y escribe estos datos en el archivo ‘close_approaches_xxx.csv’
-(5) Solamente para los asteroides de (2) que tienen un acercamiento a la Tierra según (4):
-(5.1) Determina similaridad orbital (g_2) con todos los NEA de (3) y registra el NEA con la orbita mas similar – por si sirviera de interés cientifico
-(5.2) Realiza una estimación de delta_v_total sumando delta_v_cruce (provocar un cruce geométrico de orbitas) y el delta_v_captura (captura parabólica en las proximidades de la Tierra)
-(5.3) Calcula el periodo sinódico
-(6) Imprime graficas de la distribucion orbital de los NEA de (2) destacando los de (4)  y el delta_v para los asteroides que cumplen (4)
+See main and function comments
