@@ -22,17 +22,19 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     summary_table = PrettyTable(['Asteroid', 'Accesibility [m/s]','Potential backup asteroids','Orbit Uncertainty','Synodic Period [y]','Spin Rate [rpm]','Additional Info'])
     for n_ast in range(len(asteroid)):
         
-        if asteroid.loc[n_ast,'Spin period'] is not None: asteroid.loc[n_ast,'Spin period']=round(1/(float(asteroid.loc[n_ast,"Spin period"])*60),4)
+        if asteroid.loc[n_ast,'Spin period'] is None or asteroid.loc[n_ast,'n_backup']==0: continue 
+            
+        else: 
+            asteroid.loc[n_ast,'Spin period']=round(1/(float(asteroid.loc[n_ast,"Spin period"])*60),4)
+            additional_info=[]
+            if asteroid.loc[n_ast,'SMASS taxonomy'] is not None: additional_info.append(f'SMASSII Taxonomy Known: {asteroid.loc[n_ast,"SMASS taxonomy"]}')
+            if asteroid.loc[n_ast,'Satellites']==1: additional_info.append('Secondary body')
+            if asteroid.loc[n_ast,'approaches']>=3: additional_info.append(f"{asteroid.loc[n_ast,'approaches']} close approaches from {date_app_min} to {date_app_max}")
+            if asteroid.loc[n_ast,'is_NHATS']==True: additional_info.append('Included in NHATS database')
+            if asteroid.loc[n_ast,'is_geometry']==True: additional_info.append('Geometry model available' )
+            if asteroid.loc[n_ast,'PHA']=='Y': additional_info.append('PHA asteroid' )
 
-        additional_info=[]
-        if asteroid.loc[n_ast,'SMASS taxonomy'] is not None: additional_info.append(f'SMASSII Taxonomy Known: {asteroid.loc[n_ast,"SMASS taxonomy"]}')
-        if asteroid.loc[n_ast,'Satellites']==1: additional_info.append('Secondary body')
-        if asteroid.loc[n_ast,'approaches']>=3: additional_info.append(f"{asteroid.loc[n_ast,'approaches']} close approaches from {date_app_min} to {date_app_max}")
-        if asteroid.loc[n_ast,'is_NHATS']==True: additional_info.append('Included in NHATS database')
-        if asteroid.loc[n_ast,'is_geometry']==True: additional_info.append('Geometry model available' )
-        if asteroid.loc[n_ast,'PHA']=='Y': additional_info.append('PHA asteroid' )
-                  
-        summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), asteroid.loc[n_ast,'n_backup'], asteroid.loc[n_ast,'condition_code'], 
+            summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), asteroid.loc[n_ast,'n_backup'], asteroid.loc[n_ast,'condition_code'], 
                                round(asteroid.loc[n_ast,'period_sin'],2),asteroid.loc[n_ast,'Spin period'],additional_info])
         
     print(summary_table)
@@ -47,6 +49,11 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     i=np.zeros(len(asteroid))
     u_inf=np.zeros(len(asteroid))
     delta_v=np.zeros(len(asteroid))
+    a_candidate=np.array([])
+    e_candidate=np.array([])
+    i_candidate=np.array([])
+    u_inf_candidate=np.array([])
+    delta_v_candidate=np.array([])
 
     for n_ast in range(0,len(asteroid)):
         a[n_ast]=asteroid.loc[n_ast,'a'] #a
@@ -54,22 +61,30 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
         i[n_ast]=asteroid.loc[n_ast,'i'] #i
         u_inf[n_ast]=np.sqrt(abs(3-(1/a[n_ast]+2*np.sqrt(a[n_ast]*(1-e[n_ast]**2))*np.cos(i[n_ast]*np.pi/180)))) 
         delta_v[n_ast]=asteroid.loc[n_ast,'delta_v_tot'] #delta_v_tot
-
+        if asteroid.loc[n_ast, 'n_backup'] >= 1 and asteroid.loc[n_ast, 'Spin period'] is not None:
+            a_candidate = np.append(a_candidate,  a[n_ast])  # Añadir el valor
+            e_candidate = np.append(e_candidate,  e[n_ast])
+            i_candidate = np.append(i_candidate,  i[n_ast])
+            u_inf_candidate = np.append(u_inf_candidate, u_inf[n_ast])
+            delta_v_candidate = np.append(delta_v_candidate, delta_v[n_ast])
+           
     #Removed asteroid data
     a_others=np.zeros(len(asteroid_removed))
     e_others=np.zeros(len(asteroid_removed))
     i_others=np.zeros(len(asteroid_removed))
+
     for n_ast in range(0,len(asteroid_removed)):
         a_others[n_ast]=asteroid_removed.loc[n_ast,'a'] #a
         e_others[n_ast]=asteroid_removed.loc[n_ast,'e'] #e
         i_others[n_ast]=asteroid_removed.loc[n_ast,'i'] #i
-
+ 
     #Plots
     fig=plt.figure(figsize=(15,15))
 
     ax1=plt.subplot(2,2,1) # plot a vs e
     ax1.plot(a_others,e_others,marker='+',markersize=4,color='b',linestyle='',label='NEAs analyzed')
-    ax1.plot(a,e,marker='o',markeredgecolor='k',markersize=6,color='r',linestyle='',label='NEAs w. close approach')
+    ax1.plot(a,e,marker='o',markeredgecolor='k',markersize=6,color='c',linestyle='',label='NEAs w. close approach')
+    ax1.plot(a_candidate,e_candidate,marker='o',markeredgecolor='k',markersize=6,color='r',linestyle='',label='NEAs candidates')
     ax1.set_xlabel("a [au]")
     ax1.set_ylabel("e ")
     ax1.set_xlim(0,4)
@@ -79,7 +94,8 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
 
     ax2=plt.subplot(2,2,2) # plot a vs i
     ax2.plot(a_others,i_others,marker='+',markersize=4,color='b',linestyle='',label='NEAs analized')
-    ax2.plot(a,i,marker='o',markeredgecolor='k',markersize=6 ,color='r',linestyle='',label='NEAs w. close approach')
+    ax2.plot(a,i,marker='o',markeredgecolor='k',markersize=6 ,color='c',linestyle='',label='NEAs w. close approach')
+    ax2.plot(a_candidate,i_candidate, marker='o',markeredgecolor='k',markersize=6 ,color='r',linestyle='',label='NEAs candidates')
     ax2.set_xlabel("a [au]")
     ax2.set_ylabel("i [deg]")
     ax2.set_xlim(0,4)
@@ -88,12 +104,14 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     ax2.legend()
 
     ax3=plt.subplot(2,2,3) # plot u_inf vs delta_v
-    ax3.plot(u_inf,delta_v,marker='o',markeredgecolor='k',color='r',markersize=8 ,linestyle='')
+    ax3.plot(u_inf,delta_v,marker='o',markeredgecolor='k',color='c',markersize=8 ,linestyle='',label='NEAs w. close approach')
+    ax3.plot(u_inf_candidate,delta_v_candidate,marker='o',markeredgecolor='k',color='r',markersize=8 ,linestyle='',label='NEAs candidates')
     ax3.set_xlabel("U_inf")
     ax3.set_ylabel("Delta_v [m/s]")
     ax3.set_xlim(0,1.4)
     ax3.set_ylim(bottom=0)
     ax3.grid(True)
+    ax3.legend()
 
     # #d Accesibility
     ax4=fig.add_subplot(2,2,4,projection='3d') # plot u_inf vs delta_v
