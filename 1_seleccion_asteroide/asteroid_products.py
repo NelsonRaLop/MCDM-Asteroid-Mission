@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 from prettytable import PrettyTable
@@ -22,6 +23,7 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     summary_table = PrettyTable(['Asteroid', 'Accesibility [m/s]','Potential backup asteroids','Orbit Uncertainty','Synodic Period [y]','Spin Rate [rpm]','Additional Info'])
     for n_ast in range(len(asteroid)):
         
+        # Spin period and backup asteroid required 'a priori' (not shown in decision table but computed)
         if asteroid.loc[n_ast,'Spin period'] is None or asteroid.loc[n_ast,'n_backup']==0: continue 
             
         else: 
@@ -34,8 +36,11 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
             if asteroid.loc[n_ast,'is_geometry']==True: additional_info.append('Geometry model available' )
             if asteroid.loc[n_ast,'PHA']=='Y': additional_info.append('PHA asteroid' )
 
+            # Additional info (interest) is 'a priori' requirement (not shown in decision table but computed)
+            if additional_info==[]: continue 
+            asteroid.loc[n_ast, 'additional_info'] = ', '.join(additional_info)
             summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), asteroid.loc[n_ast,'n_backup'], asteroid.loc[n_ast,'condition_code'], 
-                               round(asteroid.loc[n_ast,'period_sin'],2),asteroid.loc[n_ast,'Spin period'],additional_info])
+                               round(asteroid.loc[n_ast,'period_sin'],2),asteroid.loc[n_ast,'Spin period'],asteroid.loc[n_ast,'additional_info']])
         
     print(summary_table)
     table = f'Decision_Table_{H_min}_{H_max}_{date_app_min}_{date_app_max}.txt'
@@ -61,7 +66,8 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
         i[n_ast]=asteroid.loc[n_ast,'i'] #i
         u_inf[n_ast]=np.sqrt(abs(3-(1/a[n_ast]+2*np.sqrt(a[n_ast]*(1-e[n_ast]**2))*np.cos(i[n_ast]*np.pi/180)))) 
         delta_v[n_ast]=asteroid.loc[n_ast,'delta_v_tot'] #delta_v_tot
-        if asteroid.loc[n_ast, 'n_backup'] >= 1 and asteroid.loc[n_ast, 'Spin period'] is not None:
+        if asteroid.loc[n_ast, 'n_backup'] >= 1 and asteroid.loc[n_ast, 'Spin period'] is not None and \
+            pd.notna(asteroid.loc[n_ast, 'additional_info']):
             a_candidate = np.append(a_candidate,  a[n_ast])  # Añadir el valor
             e_candidate = np.append(e_candidate,  e[n_ast])
             i_candidate = np.append(i_candidate,  i[n_ast])
