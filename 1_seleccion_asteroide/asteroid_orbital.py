@@ -10,7 +10,7 @@ NU_EARTH=3.986004418e14 #Earth gravitational constant [SI]
 PERIOD_EARTH=365.25 #Earth period [Days]
 AU=149597870700 # 1 Astronomic unit to meters
 
-def asteroid_similarity(n_ast,asteroid,asteroid_all,g_2_threshold,distance_threshold):
+def asteroid_similarity(n_ast,asteroid,asteroid_all,g_2_threshold,rel_distance_threshold):
     '''
     This function calculates the number of possible back up asteroids once the mission is in flight 
     in case the spacecraft has to be redirected to another asteroid. This check will be performed exclusively 
@@ -33,7 +33,7 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all,g_2_threshold,distance_thres
 
     # 1.- 
     n_backup=0
-    distance_threshold_m=distance_threshold*AU # To express threshold in meters
+    distance_threshold_m=rel_distance_threshold*2*np.pi*AU # To express threshold in meters
     approach_date=asteroid.loc[n_ast,'date_approach']
     target_date=Time(approach_date, scale="tdb")
 
@@ -43,6 +43,7 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all,g_2_threshold,distance_thres
     arg_per=float(asteroid.loc[n_ast,'arg_perig'])*2*np.pi/360 #[rad]
     asc_node=float(asteroid.loc[n_ast,'RAAN'])*2*np.pi/360 #[rad]
     M_ast=float(asteroid.loc[n_ast,'M'])
+    H_size=float(asteroid.loc[n_ast,'H'])
     p=a*(1-ex**2) #[ua]
     primary_orbit = Orbit.from_classical(Sun, a*u.AU, ex * u.dimensionless_unscaled, inc* u.deg,
              asc_node* u.deg, arg_per* u.deg, M_ast* u.deg, epoch=target_date)          
@@ -58,7 +59,8 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all,g_2_threshold,distance_thres
         inc_2=float(asteroid_all.loc[n_ast_db,'i'])*2*np.pi/360
         arg_per_2=float(asteroid_all.loc[n_ast_db,'arg_perig'])*2*np.pi/360
         asc_node_2=float(asteroid_all.loc[n_ast_db,'RAAN'])*2*np.pi/360
-        M_ast_2=float(asteroid.loc[n_ast,'M'])
+        M_ast_2=float(asteroid_all.loc[n_ast_db,'M'])
+        H_size_2=float(asteroid_all.loc[n_ast_db,'H'])
         p_2=a_2*(1-ex_2**2)
 
         # Compute afinity/similarity parameter
@@ -75,11 +77,23 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all,g_2_threshold,distance_thres
             secondary_orbit = Orbit.from_classical(Sun, a_2*u.AU, ex_2 * u.dimensionless_unscaled, inc_2* u.deg,
              asc_node_2* u.deg, arg_per_2* u.deg, M_ast_2* u.deg, epoch=target_date) 
             pos2 = secondary_orbit.propagate(target_date - secondary_orbit.epoch).r
-            distance = np.linalg.norm((pos1 - pos2).to(u.m).value)  # Distance [km]
-            if distance<distance_threshold_m: n_backup=n_backup+1
+            distance = np.linalg.norm((pos1 - pos2).to(u.m).value)  # Distance [km]s
+            if distance<distance_threshold_m: 
+              n_backup=n_backup+1
+            # # Save from the list of candidates the most similar one in size, 'familiar'
+            #   delta_H_candidate=abs(H_size_2-H_size)
+            #   if delta_H_final == []: # Initialization
+            #      delta_H_final = delta_H_candidate
+            #      familiar=asteroid_all.loc[n_ast_db,'ID']
+            #   else:
+            #      if delta_H_candidate<delta_H_final:
+            #         delta_H_final=delta_H_candidate
+            #         familiar=asteroid_all.loc[n_ast_db,'ID']
+            #      else:continue
+            
         else:continue
         
-    return n_backup
+    return n_backup #, familiar, delta_H_final
 
 
 def asteroid_period(n_ast,asteroid):
