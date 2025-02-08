@@ -32,7 +32,10 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all,g_2_threshold,rel_distance_t
     '''
 
     # 1.- 
-    n_backup=0
+    n_backup=0 #Initialization
+    delta_H_final = [] #Initialization
+    familiar='-' #Initialization
+    delta_H_final=999 #Initialization
     distance_threshold_m=rel_distance_threshold*2*np.pi*AU # To express threshold in meters
     approach_date=asteroid.loc[n_ast,'date_approach']
     target_date=Time(approach_date, scale="tdb")
@@ -80,20 +83,20 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all,g_2_threshold,rel_distance_t
             distance = np.linalg.norm((pos1 - pos2).to(u.m).value)  # Distance [km]s
             if distance<distance_threshold_m: 
               n_backup=n_backup+1
-            # # Save from the list of candidates the most similar one in size, 'familiar'
-            #   delta_H_candidate=abs(H_size_2-H_size)
-            #   if delta_H_final == []: # Initialization
-            #      delta_H_final = delta_H_candidate
-            #      familiar=asteroid_all.loc[n_ast_db,'ID']
-            #   else:
-            #      if delta_H_candidate<delta_H_final:
-            #         delta_H_final=delta_H_candidate
-            #         familiar=asteroid_all.loc[n_ast_db,'ID']
-            #      else:continue
+            # Save from the list of candidates the most similar one in size, 'familiar'
+              delta_H_candidate=abs(H_size_2-H_size)
+              if delta_H_final == []: # Initialization
+                 delta_H_final = delta_H_candidate
+                 familiar=asteroid_all.loc[n_ast_db,'ID']
+              else:
+                 if delta_H_candidate<delta_H_final:
+                    delta_H_final=delta_H_candidate
+                    familiar=asteroid_all.loc[n_ast_db,'ID']
+                 else:continue
             
         else:continue
         
-    return n_backup #, familiar, delta_H_final
+    return n_backup , familiar, delta_H_final
 
 
 def asteroid_period(n_ast,asteroid):

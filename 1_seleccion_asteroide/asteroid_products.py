@@ -1,5 +1,6 @@
 import numpy as np
 import pandas as pd
+import re
 import matplotlib.pyplot as plt
 from matplotlib.colors import Normalize
 from prettytable import PrettyTable
@@ -27,6 +28,10 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
         if asteroid.loc[n_ast,'Spin period'] is None or asteroid.loc[n_ast,'n_backup']==0: continue 
             
         else: 
+            familiar_value = str(asteroid.loc[n_ast, 'familiar'])
+            match = re.search(r'\((.*?)\)', familiar_value)
+            familiar_value = match.group(1)
+
             asteroid.loc[n_ast,'Spin period']=round(1/(float(asteroid.loc[n_ast,"Spin period"])*60),4)
             additional_info=[]
             if asteroid.loc[n_ast,'SMASS taxonomy'] is not None: additional_info.append(f'SMASSII Taxonomy Known: {asteroid.loc[n_ast,"SMASS taxonomy"]}')
@@ -39,8 +44,11 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
             # Additional info (interest) is 'a priori' requirement (not shown in decision table but computed)
             if additional_info==[]: continue 
             asteroid.loc[n_ast, 'additional_info'] = ', '.join(additional_info)
-            summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), asteroid.loc[n_ast,'n_backup'], asteroid.loc[n_ast,'condition_code'], 
-                               round(asteroid.loc[n_ast,'period_sin'],2),asteroid.loc[n_ast,'Spin period'],asteroid.loc[n_ast,'additional_info']])
+            summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), 
+                                  f"{int(asteroid.loc[n_ast, 'n_backup'])} ({familiar_value}, delta_H={round(asteroid.loc[n_ast, 'delta_H'], 2)})",
+                                   asteroid.loc[n_ast,'condition_code'], 
+                                   round(asteroid.loc[n_ast,'period_sin'],2),asteroid.loc[n_ast,'Spin period'],
+                                   asteroid.loc[n_ast,'additional_info']])
         
     print(summary_table)
     table = f'Decision_Table_{H_min}_{H_max}_{date_app_min}_{date_app_max}.txt'
