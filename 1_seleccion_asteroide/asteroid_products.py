@@ -12,8 +12,9 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     2.- Generation of decision table file (simplified): Asteroid', 'Accesibility [m/s]',
         'Potential backup asteroids','Orbit Uncertainty','Synodic Period [y]','Spin Rate [rpm]','Additional Info' 
     3.- Generation of plots
+    4.- Generation of real asteroid candidates
     
-    return none
+    return asteroid_candidates
     '''
 
     # 1.-
@@ -21,6 +22,7 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     asteroid.to_csv(archive, index=False)
      
     # 2.- 
+    asteroid_candidates = pd.DataFrame(columns=asteroid.columns)
     summary_table = PrettyTable(['Asteroid', 'Accesibility [m/s]','Potential backup asteroids','Orbit Uncertainty','Synodic Period [y]','Spin Rate [rpm]','Additional Info'])
     for n_ast in range(len(asteroid)):
         
@@ -28,9 +30,9 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
         if asteroid.loc[n_ast,'Spin period'] is None or asteroid.loc[n_ast,'n_backup']==0: continue 
             
         else: 
-            familiar_value = str(asteroid.loc[n_ast, 'familiar'])
-            match = re.search(r'\((.*?)\)', familiar_value)
-            familiar_value = match.group(1)
+            familiar_ID = str(asteroid.loc[n_ast, 'familiar'])
+            match = re.search(r'\((.*?)\)', familiar_ID)
+            familiar_ID = match.group(1)
 
             asteroid.loc[n_ast,'Spin period']=round(1/(float(asteroid.loc[n_ast,"Spin period"])*60),4)
             additional_info=[]
@@ -45,10 +47,11 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
             if additional_info==[]: continue 
             asteroid.loc[n_ast, 'additional_info'] = ', '.join(additional_info)
             summary_table.add_row([asteroid.loc[n_ast,'ID'], round(asteroid.loc[n_ast,'delta_v_tot'],2), 
-                                  f"{int(asteroid.loc[n_ast, 'n_backup'])} ({familiar_value}, delta_H={round(asteroid.loc[n_ast, 'delta_H'], 2)})",
+                                  f"{int(asteroid.loc[n_ast, 'n_backup'])} ({familiar_ID}, delta_H={round(asteroid.loc[n_ast, 'delta_H'], 2)})",
                                    asteroid.loc[n_ast,'condition_code'], 
                                    round(asteroid.loc[n_ast,'period_sin'],2),asteroid.loc[n_ast,'Spin period'],
                                    asteroid.loc[n_ast,'additional_info']])
+            asteroid_candidates = pd.concat([asteroid_candidates, asteroid.loc[[n_ast]]], ignore_index=True)
         
     print(summary_table)
     table = f'Decision_Table_{H_min}_{H_max}_{date_app_min}_{date_app_max}.txt'
@@ -148,4 +151,4 @@ def asteroid_out(H_min,H_max,date_app_min,date_app_max,asteroid,asteroid_removed
     image_asteroid=f'Accesibility_{H_min}_{H_max}_{date_app_min}_{date_app_max}.png'
     plt.savefig(image_asteroid)
     
-    return
+    return asteroid_candidates

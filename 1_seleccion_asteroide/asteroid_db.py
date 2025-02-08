@@ -66,7 +66,7 @@ def asteroid_load(H_min,H_max,date_app_min,date_app_max,dist_app):
 
 
 
-def asteroid_filtering(n_ast,asteroid,asteroid_removed,asteroid_app,asteroid_NHATS, asteroid_geometry):
+def asteroid_filtering(n_ast,asteroid, asteroid_removed,asteroid_app,asteroid_NHATS, asteroid_geometry):
     """
     This function checks for close approaches and any other additional data
 
@@ -79,7 +79,6 @@ def asteroid_filtering(n_ast,asteroid,asteroid_removed,asteroid_app,asteroid_NHA
     3.- Remove if NO approches
 
     """
-
  # 1.-
     match = re.match(r'^(\d+)', asteroid.loc[n_ast,'ID'].strip()) # Check if numbered
     if match:
@@ -110,7 +109,7 @@ def asteroid_filtering(n_ast,asteroid,asteroid_removed,asteroid_app,asteroid_NHA
                 approach_date = approach_date_time_format.strftime("%Y-%m-%d") # Correct format e.g. "2023-01-27" 
     
     # 3.-
-    if approaches == 0:
+    if approaches == 0 or asteroid.loc[n_ast,'condition_code']==9:
         asteroid_removed = pd.concat([asteroid_removed, asteroid.loc[[n_ast]]], ignore_index=True)
         asteroid.drop(n_ast, inplace=True)
         cont=0   
