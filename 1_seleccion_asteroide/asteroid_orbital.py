@@ -96,7 +96,7 @@ def asteroid_similarity(n_ast,asteroid,asteroid_all,g_2_threshold,rel_distance_t
             
         else:continue
         
-    return n_backup , familiar, delta_H_final
+    return int(n_backup) , familiar, delta_H_final
 
 
 def asteroid_period(n_ast,asteroid):
